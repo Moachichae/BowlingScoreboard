@@ -1,9 +1,5 @@
 package bowling.scoreboard.service;
 
-
-import bowling.scoreboard.dto.Frame;
-import bowling.scoreboard.dto.Pin;
-
 import bowling.scoreboard.dto.Player;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +18,15 @@ public class BowlingGame {
           }
      }
 
-    public List<Player> getPlayers() {
+     public List<Player> getPlayers() {
           return players;
      }
 
      public int getRound() {
           return round;
      }
-     
 
-     public void setPlayerScore(Frame frame){
-          // 점수 계산 클래스에 보낸 후
-          // 플레이어에게 입력
+     public void setRound(int round) {
+          this.round = round;
      }
-
 }

@@ -14,5 +14,6 @@ public class Player {
 
       public void addFrame(Frame frame){
         frames.add(frame);
+
       }
     }
