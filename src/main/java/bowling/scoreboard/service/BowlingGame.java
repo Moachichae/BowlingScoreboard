@@ -12,14 +12,18 @@ public class BowlingGame {
 
      public BowlingGame(int playerNumber) {
           players = new ArrayList<>();
-          for (int i = 1; i <= playerNumber; i++) {
+          for (int i = 0; i < playerNumber; i++) {
                String playerName = "Player" + i;
                players.add(new Player(playerName));
           }
      }
 
-     public List<Player> getPlayers() {
-          return players;
+     public Player getPlayer(int playerNumber){
+          return players.get(playerNumber);
+     }
+
+     public int getPlayersCount(){
+          return players.size();
      }
 
      public int getRound() {

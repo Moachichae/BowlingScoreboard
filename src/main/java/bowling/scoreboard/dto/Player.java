@@ -14,6 +14,17 @@ public class Player {
 
       public void addFrame(Frame frame){
         frames.add(frame);
-
       }
+
+    public String getName() {
+        return name;
     }
+
+    public Frame getFrame(int round){
+        return frames.get(round);
+    }
+
+    public int getFramesCount(){
+        return frames.size();
+    }
+}

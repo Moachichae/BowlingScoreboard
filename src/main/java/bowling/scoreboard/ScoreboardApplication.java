@@ -1,6 +1,7 @@
 package bowling.scoreboard;
 
 import bowling.scoreboard.service.BowlingGame;
+import bowling.scoreboard.view.GameView;
 import bowling.scoreboard.view.StartView;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +17,10 @@ public class ScoreboardApplication {
     public void run() {
         int playerCount = startView.setPlayerCount();
         BowlingGame bowlingGame = new BowlingGame(playerCount);
+        GameView gameView = new GameView(bowlingGame);
+
+            gameView.printBoardMain();
+            gameView.setPlayersScore();
     }
 
 
