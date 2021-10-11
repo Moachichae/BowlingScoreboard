@@ -21,9 +21,14 @@ public class ScoreboardApplication {
 
             gameView.printBoardMain();
             gameView.setPlayersScore();
+            bowlingGame.addRound();
+
+
     }
 
 
-    public static void main(String[] args) {new ScoreboardApplication().run();}
+    public static void main(String[] args) {
+        new ScoreboardApplication().run();
+    }
 
 }

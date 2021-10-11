@@ -12,6 +12,7 @@ public class BowlingGame {
 
      public BowlingGame(int playerNumber) {
           players = new ArrayList<>();
+          this.round = 0;
           for (int i = 0; i < playerNumber; i++) {
                String playerName = "Player" + i;
                players.add(new Player(playerName));
@@ -30,7 +31,8 @@ public class BowlingGame {
           return round;
      }
 
-     public void setRound(int round) {
-          this.round = round;
+     public void addRound() {
+          this.round++;
      }
+
 }
