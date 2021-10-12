@@ -5,23 +5,21 @@ public class Pin {
     private final int secondTurn;
     private final int thirdSTurn;
     private boolean strike;
+    private boolean twoStrike;
     private boolean spare;
 
-
-    public Pin(int firstTurn, int secondTurn) {
-        this.firstTurn = firstTurn;
-        this.secondTurn = secondTurn;
-        this.thirdSTurn = 0;
-        if(firstTurn == 10)
-            this.strike = true;
-        else if(firstTurn + secondTurn == 10)
-            this.spare = true;
-    }
 
     public Pin(int firstTurn, int secondTurn, int thirdSTurn) {
         this.firstTurn = firstTurn;
         this.secondTurn = secondTurn;
         this.thirdSTurn = thirdSTurn;
+        if (firstTurn == 10)
+            this.strike = true;
+        else if (firstTurn + secondTurn == 10)
+            this.spare = true;
+
+        if (firstTurn + secondTurn == 20)
+            this.twoStrike = true;
     }
 
     public int getFirstTurn() {
@@ -40,7 +38,14 @@ public class Pin {
         return strike;
     }
 
+    public boolean isTwoStrike() {
+        return twoStrike;
+    }
+
+
     public boolean isSpare() {
         return spare;
     }
+
+
 }

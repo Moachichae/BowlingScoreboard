@@ -1,17 +1,17 @@
 package bowling.scoreboard.view;
 
-import bowling.scoreboard.dto.Frame;
 import bowling.scoreboard.dto.Pin;
 import bowling.scoreboard.dto.Player;
 import bowling.scoreboard.service.BowlingGame;
-import bowling.scoreboard.service.ScoreCalculate;
+import bowling.scoreboard.service.LastScoreCalculator;
+import bowling.scoreboard.service.ScoreCalculator;
 
 import java.util.Scanner;
 
 public class GameView {
     private final Scanner scanner;
     private final BowlingGame bowlingGame;
-    private static final int FINAL_ROUND = 10;
+    private static final int FINAL_ROUND = 9;
     private static final int TEN = 10;
 
 
@@ -34,13 +34,11 @@ public class GameView {
             printPlayerPins(player);
             printPlayerTotalScore(player);
         }
-
     }
 
     public void printPlayerPins(Player player) {
-        for (int i = 0; i < bowlingGame.getRound(); i++) {
-            Frame frame = player.getFrame(i);
-            Pin pin = frame.getPin();
+        for (int round = 0; round < bowlingGame.getRound(); round++) {
+            Pin pin = player.getPinOfRoundInFrame(round);
             System.out.print(getPinForm(pin.getFirstTurn(),pin.getSecondTurn()));
         }
         System.out.print("\n");
@@ -58,14 +56,11 @@ public class GameView {
     public void printPlayerTotalScore(Player player) {
         System.out.print("| TOTAL |");
         for (int round = 0; round < bowlingGame.getRound(); round++) {
-            Frame frame = player.getFrame(round);
-            Pin pin = frame.getPin();
-            int total = frame.getTotal();
+            int total = player.getTotalOfRoundInFrame(round);
             String str = total > 0 ? String.valueOf(total) : "  ";
             System.out.print(getTotalForm(total));
         }
         System.out.println();
-
     }
 
     public String getTotalForm(int total){
@@ -75,7 +70,7 @@ public class GameView {
             return "  "+ total +"   |";
        else if (total < 100)
             return "  "+total+"  |";
-       return " "+total+" |";
+       return " "+total+"  |";
     }
 
     public void setPlayersScore() {
@@ -92,17 +87,22 @@ public class GameView {
         System.out.println(player.getName());
         System.out.print("첫번째 점수를 입력하세요 : ");
         score[0] = scanner.nextInt();
-        if (score[0] < TEN){
+        if (round == FINAL_ROUND || score[0] < TEN){
             System.out.print("두번째 점수를 입력하세요 : ");
             score[1] = scanner.nextInt();
         }
-        if (round == FINAL_ROUND && score[0] + score[1] >= 10){
+        if (round == FINAL_ROUND && score[0] + score[1] >= 10 && score[0] + score[1] < 20){
             System.out.print("세번째 점수를 입력하세요 : ");
             score[2] = scanner.nextInt();
-        }
 
-        ScoreCalculate scoreCalculate = ScoreCalculate.getScoreCalculateInstance();
-        scoreCalculate.setTotal(player,round,score);
+        }
+        ScoreCalculator scoreCalculate = new ScoreCalculator();
+        if(round == FINAL_ROUND){
+            scoreCalculate = new LastScoreCalculator();
+            scoreCalculate.setScore(player,round,score);
+            return;
+        }
+        scoreCalculate.setScore(player,round,score);
     }
 
 

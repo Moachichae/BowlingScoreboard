@@ -12,7 +12,7 @@ public class Player {
         this.frames = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
-            frames.add(new Frame(i));
+            frames.add(new Frame());
         }
     }
 
@@ -20,15 +20,30 @@ public class Player {
         return name;
     }
 
+    public List<Frame> getFrames() {
+        return frames;
+    }
+
     public Frame getFrame(int round) {
         return frames.get(round);
     }
 
-    public int getFramesCount() {
-        return frames.size();
+    public void setPinOfRoundInFrame(Pin pin, int round){
+        Frame frame = getFrame(round);
+        frame.setPin(pin);
     }
 
-    public List<Frame> getFrames() {
-        return frames;
+    public void setTotalOfRoundInFrame(int total, int round){
+        Frame frame = getFrame(round);
+        frame.setTotal(total);
     }
+    public int getTotalOfRoundInFrame(int round){
+        return getFrame(round).getTotal();
+    }
+
+    public Pin getPinOfRoundInFrame(int round){
+        return getFrame(round).getPin();
+    }
+
+
 }

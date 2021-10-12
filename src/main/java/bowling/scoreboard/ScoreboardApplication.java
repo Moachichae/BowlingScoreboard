@@ -18,12 +18,13 @@ public class ScoreboardApplication {
         int playerCount = startView.setPlayerCount();
         BowlingGame bowlingGame = new BowlingGame(playerCount);
         GameView gameView = new GameView(bowlingGame);
-
+        int n = 10;
+        while (n-- > 0) {
             gameView.printBoardMain();
             gameView.setPlayersScore();
             bowlingGame.addRound();
-
-
+        }
+        gameView.printBoardMain();
     }
 
 
