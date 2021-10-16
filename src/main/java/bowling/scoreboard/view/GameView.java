@@ -6,6 +6,7 @@ import bowling.scoreboard.service.BowlingGame;
 import bowling.scoreboard.service.LastScoreCalculator;
 import bowling.scoreboard.service.ScoreCalculator;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class GameView {
@@ -39,16 +40,16 @@ public class GameView {
     public void printPlayerPins(Player player) {
         for (int round = 0; round < bowlingGame.getRound(); round++) {
             Pin pin = player.getPinOfRoundInFrame(round);
-            System.out.print(getPinForm(pin.getFirstTurn(),pin.getSecondTurn()));
+            System.out.print(getPinForm(pin.getFirstTurn(), pin.getSecondTurn()));
         }
         System.out.print("\n");
     }
 
-    public String getPinForm(int firstPin, int secondPin){
+    public String getPinForm(int firstPin, int secondPin) {
         String blank = "  ";
-        if(firstPin == TEN)
+        if (firstPin == TEN)
             return "STRIKE|";
-        else if(firstPin + secondPin == TEN)
+        else if (firstPin + secondPin == TEN)
             return " " + firstPin + blank + "\\ |";
         return " " + firstPin + blank + secondPin + " |";
     }
@@ -63,14 +64,14 @@ public class GameView {
         System.out.println();
     }
 
-    public String getTotalForm(int total){
-       if(total == 0)
-           return "      |";
-        else if(total < 10)
-            return "  "+ total +"   |";
-       else if (total < 100)
-            return "  "+total+"  |";
-       return " "+total+"  |";
+    public String getTotalForm(int total) {
+        if (total == 0)
+            return "      |";
+        else if (total < 10)
+            return "  " + total + "   |";
+        else if (total < 100)
+            return "  " + total + "  |";
+        return " " + total + "  |";
     }
 
     public void setPlayersScore() {
@@ -80,31 +81,60 @@ public class GameView {
         }
     }
 
-    public void setPlayerScoreView(int playerCount){
+    public void setPlayerScoreView(int playerCount) {
         int round = bowlingGame.getRound();
         Player player = bowlingGame.getPlayer(playerCount);
-        int [] score = new int[3];
+        int[] score = new int[3];
+        char temp;
+
         System.out.println(player.getName());
         System.out.print("첫번째 점수를 입력하세요 : ");
-        score[0] = scanner.nextInt();
-        if (round == FINAL_ROUND || score[0] < TEN){
+        score[0] = getScore();
+        if (round == FINAL_ROUND || score[0] < TEN) {
             System.out.print("두번째 점수를 입력하세요 : ");
-            score[1] = scanner.nextInt();
+            score[1] = getScore();
         }
-        if (round == FINAL_ROUND && score[0] + score[1] >= 10 && score[0] + score[1] < 20){
+        if (round == FINAL_ROUND && score[0] + score[1] >= 10 && score[0] + score[1] < 20) {
             System.out.print("세번째 점수를 입력하세요 : ");
-            score[2] = scanner.nextInt();
-
+            score[2] = getScore();
         }
-        ScoreCalculator scoreCalculate = new ScoreCalculator();
-        if(round == FINAL_ROUND){
-            scoreCalculate = new LastScoreCalculator();
-            scoreCalculate.setScore(player,round,score);
+
+        if (!checkScore(score, round)) {
+            System.out.println("다시 입력해주세요");
+            setPlayerScoreView(playerCount);
             return;
         }
-        scoreCalculate.setScore(player,round,score);
+        ScoreCalculator scoreCalculate = new ScoreCalculator();
+        if (round == FINAL_ROUND) {
+            scoreCalculate = new LastScoreCalculator();
+            scoreCalculate.setScore(player, round, score);
+            return;
+        }
+        scoreCalculate.setScore(player, round, score);
     }
 
+    boolean checkScore(int[] score, int round) {
+        for (int s : score) {
+            if (s < 0 || s > 10)
+                return false;
+        }
+
+        return round == FINAL_ROUND || score[0] + score[1] <= 20;
+    }
+
+    int getScore() {
+        int score = 0;
+        while (true) {
+            try {
+                score = scanner.nextInt();
+                break;
+            } catch (InputMismatchException e) {
+                scanner.nextLine();
+                System.out.println("0~10의 정수만 입력하세요");
+            }
+        }
+        return score;
+    }
 
 
 }
