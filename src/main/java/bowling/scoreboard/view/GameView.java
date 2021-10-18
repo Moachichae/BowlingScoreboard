@@ -23,7 +23,7 @@ public class GameView {
 
     public void printBoardHeader() {
         final String BOARD_HEADER_MESSAGE
-                = "| ROUND |  01  |  02  |  03  |  04  |  05  |  06  |  07  |  08  |  09  |  10  |";
+                = "| ROUND |  01  |  02  |  03  |  04  |  05  |  06  |  07  |  08  |  09  |   10   |";
         System.out.println(BOARD_HEADER_MESSAGE);
     }
 
@@ -40,13 +40,14 @@ public class GameView {
     public void printPlayerPins(Player player) {
         for (int round = 0; round < bowlingGame.getRound(); round++) {
             Pin pin = player.getPinOfRoundInFrame(round);
-            System.out.print(getPinForm(pin.getFirstTurn(), pin.getSecondTurn()));
+            System.out.print(getPinForm(pin.getFirstTurn(), pin.getSecondTurn(), pin.getThirdSTurn()));
         }
         System.out.print("\n");
     }
 
-    public String getPinForm(int firstPin, int secondPin) {
+    public String getPinForm(int firstPin, int secondPin, int thirdPin) {
         String blank = "  ";
+
         if (firstPin == TEN)
             return "STRIKE|";
         else if (firstPin + secondPin == TEN)
@@ -118,8 +119,13 @@ public class GameView {
             if (s < 0 || s > 10)
                 return false;
         }
+        if (round != FINAL_ROUND && score[0] + score[1] > 10)
+            return false;
 
-        return round == FINAL_ROUND || score[0] + score[1] <= 20;
+        if (round == FINAL_ROUND && score[0] + score[1] > 20)
+            return false;
+
+        return true;
     }
 
     int getScore() {
