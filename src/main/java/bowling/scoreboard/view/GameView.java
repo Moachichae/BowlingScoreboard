@@ -14,7 +14,9 @@ public class GameView {
     private final BowlingGame bowlingGame;
     private static final int FINAL_ROUND = 9;
     private static final int TEN = 10;
-
+    private static final String STRIKE = "STRIKE";
+    private static final String ZERO = "-";
+    private static final String SPARE = "\\";
 
     public GameView(BowlingGame bowlingGame) {
         this.bowlingGame = bowlingGame;
@@ -23,7 +25,7 @@ public class GameView {
 
     public void printBoardHeader() {
         final String BOARD_HEADER_MESSAGE
-                = "| ROUND |  01  |  02  |  03  |  04  |  05  |  06  |  07  |  08  |  09  |   10   |";
+                = "| ROUND |  01  |  02  |  03  |  04  |  05  |  06  |  07  |  08  |  09  |      10     |";
         System.out.println(BOARD_HEADER_MESSAGE);
     }
 
@@ -40,19 +42,57 @@ public class GameView {
     public void printPlayerPins(Player player) {
         for (int round = 0; round < bowlingGame.getRound(); round++) {
             Pin pin = player.getPinOfRoundInFrame(round);
-            System.out.print(getPinForm(pin.getFirstTurn(), pin.getSecondTurn(), pin.getThirdSTurn()));
+            if (round == FINAL_ROUND)
+                System.out.print(getPinForm(pin.getFirstTurn(), pin.getSecondTurn(), pin.getThirdSTurn()));
+            else {
+                System.out.print(getPinForm(pin.getFirstTurn(), pin.getSecondTurn()));
+            }
         }
         System.out.print("\n");
     }
 
     public String getPinForm(int firstPin, int secondPin, int thirdPin) {
-        String blank = "  ";
+        String firstPinStr = firstPin > 0 ? String.valueOf(firstPin) : ZERO;
+        String secondPinStr = secondPin > 0 ? String.valueOf(secondPin) : ZERO;
+        String thirdPinStr = thirdPin > 0 ? String.valueOf(thirdPin) : ZERO;
 
-        if (firstPin == TEN)
-            return "STRIKE|";
-        else if (firstPin + secondPin == TEN)
-            return " " + firstPin + blank + "\\ |";
-        return " " + firstPin + blank + secondPin + " |";
+        if (firstPin == TEN) {
+            if (secondPin == TEN)
+                return STRIKE + " " + STRIKE + "|";
+            firstPinStr = STRIKE;
+        }
+
+        if (firstPin + secondPin == TEN && firstPin != TEN) {
+            secondPinStr = SPARE;
+        }
+        if (thirdPin == TEN) {
+            if (secondPin == 0)
+                thirdPinStr = SPARE;
+            else
+                thirdPinStr = STRIKE;
+        }
+
+        if (firstPinStr.equals(STRIKE) || thirdPinStr.equals(STRIKE))
+            return " " + firstPinStr + "  " + secondPinStr + "  " + thirdPinStr + "|";
+
+        return "  " + firstPinStr + "   " + secondPinStr + "   " + thirdPinStr + "  |";
+    }
+
+
+    public String getPinForm(int firstPin, int secondPin) {
+        String firstPinStr = firstPin > 0 ? String.valueOf(firstPin) : ZERO;
+        String secondPinStr = secondPin > 0 ? String.valueOf(secondPin) : ZERO;
+
+        if (firstPin == TEN) {
+            firstPinStr = STRIKE;
+            return firstPinStr + "|";
+        } else if (firstPin + secondPin == 10) {
+            secondPinStr = SPARE;
+        }
+
+        return " " + firstPinStr + "  " + secondPinStr + " |";
+
+
     }
 
     public void printPlayerTotalScore(Player player) {
@@ -60,19 +100,26 @@ public class GameView {
         for (int round = 0; round < bowlingGame.getRound(); round++) {
             int total = player.getTotalOfRoundInFrame(round);
             String str = total > 0 ? String.valueOf(total) : "  ";
-            System.out.print(getTotalForm(total));
+            System.out.print(getTotalForm(total, round));
         }
         System.out.println();
     }
 
-    public String getTotalForm(int total) {
+    public String getTotalForm(int total, int round) {
+        String blank = "  ";
+        String LastBlank = "";
+        if (round == FINAL_ROUND) {
+            blank = "     ";
+            LastBlank = "    ";
+        }
+
         if (total == 0)
-            return "      |";
+            return LastBlank + "      |";
         else if (total < 10)
-            return "  " + total + "   |";
+            return blank + total + blank + " |";
         else if (total < 100)
-            return "  " + total + "  |";
-        return " " + total + "  |";
+            return blank + total + blank + "|";
+        return " " + LastBlank + total + blank + "|";
     }
 
     public void setPlayersScore() {
